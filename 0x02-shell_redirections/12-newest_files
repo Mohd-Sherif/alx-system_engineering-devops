@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -lt | cut -d ' ' -f 10 | tail -n +2 | head
+ls -lt | tail -n +2 | rev | cut -d ' ' -f 1 | rev | head
