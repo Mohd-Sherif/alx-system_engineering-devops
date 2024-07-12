@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/bin/env bash
 # Function to fetch and display DNS record information
 get_dns_info() {
   local domain=$1
@@ -9,11 +8,14 @@ get_dns_info() {
   local full_domain="${subdomain}.${domain}"
 
   # Use dig to get the DNS record information
-  local dig_output=$(dig +noall +answer "$full_domain")
+  local dig_output
+  dig_output=$(dig +noall +answer "$full_domain")
 
   # Parse the dig output to get the record type and destination
-  local record_type=$(echo "$dig_output" | awk '{print $4}')
-  local destination=$(echo "$dig_output" | awk '{print $5}')
+  local record_type
+  record_type=$(echo "$dig_output" | awk '{print $4}')
+  local destination
+  destination=$(echo "$dig_output" | awk '{print $5}')
 
   # Display the information
   if [[ -z "$record_type" || -z "$destination" ]]; then
