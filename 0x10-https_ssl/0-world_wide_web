@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Function to fetch and display DNS record information
+get_dns_info() {
+  local domain=$1
+  local subdomain=$2
+
+  # Construct the full domain name
+  local full_domain="${subdomain}.${domain}"
+
+  # Use dig to get the DNS record information
+  local dig_output=$(dig +noall +answer "$full_domain")
+
+  # Parse the dig output to get the record type and destination
+  local record_type=$(echo "$dig_output" | awk '{print $4}')
+  local destination=$(echo "$dig_output" | awk '{print $5}')
+
+  # Display the information
+  if [[ -z "$record_type" || -z "$destination" ]]; then
+    echo "The subdomain ${subdomain} does not have a valid DNS record."
+  else
+    echo "The subdomain ${subdomain} is a ${record_type} record and points to ${destination}"
+  fi
+}
+
+# Main script logic
+main() {
+  local domain=$1
+  local subdomain=$2
+
+  if [[ -z "$domain" ]]; then
+    echo "Usage: $0 domain [subdomain]"
+    exit 1
+  fi
+
+  if [[ -n "$subdomain" ]]; then
+    get_dns_info "$domain" "$subdomain"
+  else
+    subdomains=("www" "lb-01" "web-01" "web-02")
+    for sub in "${subdomains[@]}"; do
+      get_dns_info "$domain" "$sub"
+    done
+  fi
+}
+
+main "$@"
+
