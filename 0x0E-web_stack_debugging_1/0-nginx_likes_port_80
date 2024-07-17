@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 # Run Nginx and listen on port 80.
 
 # Update package list and install Nginx
